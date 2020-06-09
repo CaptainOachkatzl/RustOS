@@ -14,6 +14,6 @@ fn panic(_info: &PanicInfo) -> ! {
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    vga_driver::print_hello_world_vga();
+    vga_driver::print_vga(b"write to vga!");
     loop {}
 }
