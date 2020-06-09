@@ -1,0 +1,18 @@
+VS Code extensions:
+"C/C++"
+"Cargo"
+"Rust"
+
+
+used commands to get setup to run:
+
+in project directory: "rustup override add nightly"     # need additional features from the nightly build
+"rustc --version"   # to check if nightly build was successfully deployed
+"cargo install cargo-xbuild"    # to install the cross compiler version
+"rustup component add rust-src"     # to add rust source code which the cross compiler relies on (kinda obvious we cant use precompiled stuff here)
+"cargo xbuild" to build the kernel
+"cargo install bootimage"   # installing the bootloader and the linker between kernel and bootloader
+"rustup component add llvm-tools-preview"   # linker tools for the bootloader above
+"cargo bootimage"   # create a bootable image by linking together bootloader and kernel
+"dd if=target/x86_64-rust_os/debug/bootimage-rust_os.bin of=/dev/sdX && sync" to write bootable image to USB
+"cargo xrun"    # to build and run on QEMU
