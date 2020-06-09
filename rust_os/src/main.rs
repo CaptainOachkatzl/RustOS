@@ -4,6 +4,8 @@
 
 use core::panic::PanicInfo;
 
+mod vga_driver;
+
 /// This function is called on panic.
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -12,5 +14,6 @@ fn panic(_info: &PanicInfo) -> ! {
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    vga_driver::print_hello_world_vga();
     loop {}
 }
