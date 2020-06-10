@@ -95,12 +95,6 @@ impl VGAWriter
         }
     }
 
-    pub fn write_line(&mut self, string: &str)
-    {
-        self.write_string(string);
-        self.new_line();
-    }
-
     fn new_line(&mut self)
     {
         for row in 1..BUFFER_HEIGHT 
