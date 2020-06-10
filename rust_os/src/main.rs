@@ -61,6 +61,12 @@ fn trivial_assertion() {
     serial_println!("[ok]");
 }
 
+#[test_case]
+fn will_fail() {
+    serial_println!("this has to fail");
+    assert_eq!(0, 1);
+}
+
 #[no_mangle]
 pub extern "C" fn _start() -> ! 
 {
