@@ -56,9 +56,7 @@ fn test_runner(tests: &[&dyn test_utilities::Testable]) {
 
 #[test_case]
 fn trivial_assertion() {
-    serial_println!("trivial assertion... ");
     assert_eq!(1, 1);
-    serial_println!("[ok]");
 }
 
 #[no_mangle]
