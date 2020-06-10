@@ -50,16 +50,17 @@ struct VGABuffer
 }
 
 
-struct VGAWriter
+pub struct VGAWriter
 {
     column_position: usize,
     color_code: ColorCode,
     buffer: &'static mut VGABuffer
 }
 
+#[allow(dead_code)]
 impl VGAWriter 
 {
-    fn write_char(&mut self, character: u8)
+    pub fn write_char(&mut self, character: u8)
     {
         match character // switch for rust
         {
@@ -80,7 +81,7 @@ impl VGAWriter
         }
     }
 
-    fn write_string(&mut self, string: &str)
+    pub fn write_string(&mut self, string: &str)
     {
         for byte in string.bytes()
         {
@@ -94,7 +95,7 @@ impl VGAWriter
         }
     }
 
-    fn write_line(&mut self, string: &str)
+    pub fn write_line(&mut self, string: &str)
     {
         self.write_string(string);
         self.new_line();
@@ -115,7 +116,7 @@ impl VGAWriter
         self.column_position = 0;
     }
 
-    fn clear_screen(&mut self)
+    pub fn clear_screen(&mut self)
     {
         for row in 0..BUFFER_HEIGHT
         {
@@ -144,32 +145,13 @@ impl fmt::Write for VGAWriter // basically an override for an interface that all
     }
 }
 
-pub fn print_vga_test()
-{
-    use core::fmt::Write;
+use spin::Mutex;
+use lazy_static::lazy_static;
 
-    let mut writer = VGAWriter 
-    {
+lazy_static! {
+    pub static ref WRITER: Mutex<VGAWriter> = Mutex::new(VGAWriter {
         column_position: 0,
-        color_code: ColorCode::new(Color::Red, Color::Black),
+        color_code: ColorCode::new(Color::Yellow, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut VGABuffer) },
-    };
-
-    writer.clear_screen();
-    writer.write_line("writing a string");
-    writer.write_line("writing in new line");
-    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
-}
-
-#[allow(dead_code)]
-pub fn print_vga(text: &[u8]) {
-
-    let vga_buffer = 0xb8000 as *mut u8;
-
-    for (i, &byte) in text.iter().enumerate() {
-        unsafe {
-            *vga_buffer.offset(i as isize * 2) = byte;
-            *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
-        }
-    }
+    });
 }
