@@ -16,3 +16,4 @@ in project directory: "rustup override add nightly"     # need additional featur
 "cargo bootimage"   # create a bootable image by linking together bootloader and kernel
 "dd if=target/x86_64-rust_os/debug/bootimage-rust_os.bin of=/dev/sdX && sync" to write bootable image to USB
 "cargo xrun"    # to build and run on QEMU
+"cargo xtest"   # to run the test suite
