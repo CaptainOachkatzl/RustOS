@@ -9,6 +9,7 @@ pub mod vga_driver;
 #[macro_use] pub mod serial_driver;
 pub mod test_utilities;
 pub mod interrupts;
+pub mod gdt;
 
 use core::panic::PanicInfo;
 
@@ -29,6 +30,7 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 }
 
 pub fn init() {
+    gdt::init();
     interrupts::init_idt();
 }
 
