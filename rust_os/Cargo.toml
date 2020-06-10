@@ -35,3 +35,7 @@ test-timeout = 300              # (in seconds)
 name = "intentionally_failing"
 harness = false
 
+[[test]]
+name = "stack_overflow"
+harness = false
+
