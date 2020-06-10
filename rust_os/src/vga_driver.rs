@@ -133,8 +133,21 @@ impl VGAWriter
     }
 }
 
+use core::fmt;
+
+impl fmt::Write for VGAWriter // basically an override for an interface that allows the usage of string formatting macros
+{
+    fn write_str(&mut self, s: &str) -> fmt::Result 
+    {
+        self.write_string(s);
+        Ok(())
+    }
+}
+
 pub fn print_vga_test()
 {
+    use core::fmt::Write;
+
     let mut writer = VGAWriter 
     {
         column_position: 0,
@@ -144,7 +157,8 @@ pub fn print_vga_test()
 
     writer.clear_screen();
     writer.write_line("writing a string");
-    writer.write_string("writing in new line");
+    writer.write_line("writing in new line");
+    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
 }
 
 #[allow(dead_code)]
