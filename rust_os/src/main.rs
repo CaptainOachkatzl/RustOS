@@ -12,15 +12,31 @@ use bootloader::{BootInfo, entry_point};
 entry_point!(kernel_main);
 
 #[no_mangle]
-fn kernel_main(_boot_info: &'static BootInfo) -> ! 
+fn kernel_main(boot_info: &'static BootInfo) -> ! 
 {
+    use rust_os::memory::active_level_4_table;
+    use x86_64::VirtAddr;
+
     println!("Starting up OS...");
 
     println!("Initializing modules...");
 
     rust_os::init();
 
+    println!("Translating memory mapping...");
 
+    println!("Physical memory offset is {}", boot_info.physical_memory_offset);
+
+    println!("Loading level 4 page table...");
+
+    let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
+    let l4_table = unsafe { active_level_4_table(phys_mem_offset) };
+
+    for (i, entry) in l4_table.iter().enumerate() {
+        if !entry.is_unused() {
+            println!("L4 Entry {}: {:?}", i, entry);
+        }
+    }
 
     #[cfg(test)]
     test_main();
