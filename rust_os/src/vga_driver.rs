@@ -147,7 +147,7 @@ pub fn print_vga_test()
     writer.write_string("writing in new line");
 }
 
-
+#[allow(dead_code)]
 pub fn print_vga(text: &[u8]) {
 
     let vga_buffer = 0xb8000 as *mut u8;
