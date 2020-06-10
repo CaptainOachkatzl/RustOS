@@ -9,6 +9,7 @@ use core::panic::PanicInfo;
 
 mod vga_driver;
 #[macro_use] mod serial_driver;
+mod test_utilities;
 
 /// This function is called on panic
 #[cfg(not(test))] 
@@ -46,10 +47,10 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 }
 
 #[cfg(test)]
-fn test_runner(tests: &[&dyn Fn()]) {
+fn test_runner(tests: &[&dyn test_utilities::Testable]) {
     serial_println!("Running {} tests", tests.len());
     for test in tests {
-        test();
+        test.run();
     }
 }
 
