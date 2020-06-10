@@ -8,7 +8,7 @@
 use core::panic::PanicInfo;
 
 mod vga_driver;
-mod serial_driver;
+#[macro_use] mod serial_driver;
 
 /// This function is called on panic
 #[cfg(not(test))] 
