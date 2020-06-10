@@ -8,6 +8,7 @@
 use core::panic::PanicInfo;
 
 mod vga_driver;
+mod serial_driver;
 
 /// This function is called on panic.
 #[panic_handler]
