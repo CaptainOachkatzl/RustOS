@@ -41,10 +41,12 @@ struct VGASymbol
     color_code: ColorCode
 }
 
+use volatile::Volatile;
+
 #[repr(transparent)]
 struct VGABuffer
 {
-    symbols: [[VGASymbol; BUFFER_WIDTH]; BUFFER_HEIGHT]
+    symbols: [[Volatile<VGASymbol>; BUFFER_WIDTH]; BUFFER_HEIGHT]
 }
 
 
@@ -72,7 +74,7 @@ impl VGAWriter
                 let row = BUFFER_HEIGHT - 1;
                 let col = self.column_position;
 
-                self.buffer.symbols[row][col] = VGASymbol { ascii_character: character, color_code: self.color_code };
+                self.buffer.symbols[row][col].write(VGASymbol { ascii_character: character, color_code: self.color_code });
                 self.column_position += 1;
             }
         }
@@ -104,14 +106,13 @@ impl VGAWriter
         {
             for col in 0..BUFFER_WIDTH 
             {
-                let character = self.buffer.symbols[row][col];
-                self.buffer.symbols[row - 1][col] = character;
+                let character = self.buffer.symbols[row][col].read();
+                self.buffer.symbols[row - 1][col].write(character);
             }
         }
 
         self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
- 
     }
 
     fn clear_screen(&mut self)
@@ -127,7 +128,7 @@ impl VGAWriter
         let blank = VGASymbol { ascii_character: b' ', color_code: self.color_code };
         for col in 0..BUFFER_WIDTH
         {
-            self.buffer.symbols[row][col] = blank;
+            self.buffer.symbols[row][col].write(blank);
         }
     }
 }
