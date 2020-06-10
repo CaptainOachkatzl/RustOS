@@ -51,7 +51,6 @@ fn test_runner(tests: &[&dyn Fn()]) {
     for test in tests {
         test();
     }
-    exit_qemu(QemuExitCode::Success)
 }
 
 #[test_case]
@@ -76,6 +75,9 @@ pub extern "C" fn _start() -> !
 
     #[cfg(test)]
     test_main();
+    #[cfg(test)]
+    exit_qemu(QemuExitCode::Success);
+
 
     loop {}
 }
