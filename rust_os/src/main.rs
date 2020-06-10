@@ -16,10 +16,7 @@ fn panic(_info: &PanicInfo) -> !
 #[no_mangle]
 pub extern "C" fn _start() -> ! 
 {
-    use core::fmt::Write;
-    
-    vga_driver::WRITER.lock().write_string("test");
-    write!(vga_driver::WRITER.lock(), ", some numbers: {} {}", 42, 1.337).unwrap();
+    println!("Hello world{}", 123);
 
     loop {}
 }
