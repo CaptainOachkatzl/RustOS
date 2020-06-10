@@ -31,6 +31,13 @@ pub extern "C" fn _start() -> !
 
     println!("Started.");
 
+    rust_os::init();
+
+    // invoke a breakpoint exception
+    x86_64::instructions::interrupts::int3();
+
+    println!("It did not crash!");
+
     #[cfg(test)]
     test_main();
     #[cfg(test)]
