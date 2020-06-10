@@ -16,16 +16,18 @@ fn kernel_main(_boot_info: &'static BootInfo) -> !
 {
     println!("Starting up OS...");
 
-    println!("Started.");
+    println!("Initializing modules...");
 
     rust_os::init();
 
-    println!("It did not crash!");
+
 
     #[cfg(test)]
     test_main();
     #[cfg(test)]
     rust_os::exit_qemu(rust_os::QemuExitCode::Success);
+
+    println!("Tasks finished. Going idle.");
 
     rust_os::hlt_loop();
 }
