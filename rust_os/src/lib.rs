@@ -36,6 +36,12 @@ pub fn init() {
     x86_64::instructions::interrupts::enable();
 }
 
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 
 pub fn test_runner(tests: &[&dyn test_utilities::Testable]) {
     serial_println!("Running {} tests", tests.len());
@@ -48,7 +54,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
-    loop {}
+    hlt_loop();
 }
 
 /// Entry point for `cargo xtest`
@@ -58,7 +64,7 @@ pub extern "C" fn _start() -> ! {
     init();
     test_main();
     exit_qemu(QemuExitCode::Success);
-    loop {}
+    hlt_loop();
 }
 
 #[cfg(test)]

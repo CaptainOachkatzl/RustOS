@@ -14,7 +14,7 @@ use rust_os::println;
 fn panic(info: &PanicInfo) -> ! 
 {
     println!("{}", info);
-    loop {}
+    rust_os::hlt_loop();
 }
 
 // panic handler in test mode
@@ -40,5 +40,5 @@ pub extern "C" fn _start() -> !
     #[cfg(test)]
     rust_os::exit_qemu(rust_os::QemuExitCode::Success);
 
-    loop {}
+    rust_os::hlt_loop();
 }
