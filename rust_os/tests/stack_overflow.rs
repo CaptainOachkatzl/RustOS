@@ -45,8 +45,9 @@ lazy_static! {
     };
 }
 
-use rust_os::{exit_qemu, QemuExitCode, serial_println};
+use rust_os::serial_println;
 use x86_64::structures::idt::InterruptStackFrame;
+use rust_os::qemu::{exit_qemu, QemuExitCode};
 
 extern "x86-interrupt" fn test_double_fault_handler(
     _stack_frame: &mut InterruptStackFrame,

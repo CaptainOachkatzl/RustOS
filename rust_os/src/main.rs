@@ -8,6 +8,7 @@
 use core::panic::PanicInfo;
 use rust_os::println;
 use bootloader::{BootInfo, entry_point};
+#[cfg(test)] use rust_os::qemu::{exit_qemu, QemuExitCode};
 
 entry_point!(kernel_main);
 
@@ -49,7 +50,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> !
     #[cfg(test)]
     test_main();
     #[cfg(test)]
-    rust_os::exit_qemu(rust_os::QemuExitCode::Success);
+    exit_qemu(QemuExitCode::Success);
 
     println!("Tasks finished. Going idle.");
 

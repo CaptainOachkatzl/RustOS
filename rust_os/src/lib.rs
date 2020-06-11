@@ -11,24 +11,9 @@ pub mod test_utilities;
 pub mod interrupts;
 pub mod gdt;
 pub mod memory;
+pub mod qemu;
 
 use core::panic::PanicInfo;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(u32)]
-pub enum QemuExitCode {
-    Success = 0x10,
-    Failed = 0x11,
-}
-
-pub fn exit_qemu(exit_code: QemuExitCode) {
-    use x86_64::instructions::port::Port;
-
-    unsafe {
-        let mut port = Port::new(0xf4);
-        port.write(exit_code as u32);
-    }
-}
 
 pub fn init() {
     gdt::init();
@@ -54,7 +39,7 @@ pub fn test_runner(tests: &[&dyn test_utilities::Testable]) {
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
-    exit_qemu(QemuExitCode::Failed);
+    qemu::exit_qemu(qemu::QemuExitCode::Failed);
     hlt_loop();
 }
 
@@ -70,7 +55,7 @@ entry_point!(test_kernel_main);
 fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
     init();
     test_main();
-    exit_qemu(QemuExitCode::Success);
+    qemu::exit_qemu(qemu::QemuExitCode::Success);
     hlt_loop();
 }
 

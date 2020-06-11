@@ -2,7 +2,8 @@
 #![no_main]
 
 use core::panic::PanicInfo;
-use rust_os::{QemuExitCode, exit_qemu, serial_println, serial_print};
+use rust_os::{serial_println, serial_print};
+use rust_os::qemu::{ QemuExitCode, exit_qemu };
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {

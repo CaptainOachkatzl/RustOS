@@ -17,7 +17,7 @@ pub extern "C" fn _start() -> ! {
 fn test_runner(tests: &[&dyn rust_os::test_utilities::Testable]) 
 {
     rust_os::test_runner(tests);
-    rust_os::exit_qemu(rust_os::QemuExitCode::Success);
+    rust_os::qemu::exit_qemu(rust_os::qemu::QemuExitCode::Success);
 }
 
 #[panic_handler]
