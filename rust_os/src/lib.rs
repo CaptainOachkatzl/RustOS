@@ -16,6 +16,7 @@ pub mod gdt;
 pub mod memory;
 pub mod qemu;
 pub mod allocator;
+pub mod linked_list;
 
 use core::panic::PanicInfo;
 
