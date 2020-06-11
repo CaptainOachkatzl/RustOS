@@ -45,29 +45,23 @@ fn test_process()
 fn memory_mapping(boot_info: &'static BootInfo)
 {
     use rust_os::memory;
-    use x86_64::{structures::paging::MapperAllSizes, VirtAddr};
+    use x86_64::VirtAddr;
+    use x86_64::structures::paging::Page;
+    use rust_os::memory::BootInfoFrameAllocator;
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
+    let mut mapper = unsafe { memory::init(phys_mem_offset) };
+    let mut frame_allocator = unsafe {
+        BootInfoFrameAllocator::init(&boot_info.memory_map)
+    };
 
-    let addresses = [
-        // the identity-mapped vga buffer page
-        0xb8000,
-        // some code page
-        0x201008,
-        // // some stack page
-        0x0100_0020_1a10,
-        // virtual address mapped to physical address 0
-        boot_info.physical_memory_offset,
-    ];
+    // map an unused page
+    let page = Page::containing_address(VirtAddr::new(0xdeadbeaf));
+    memory::create_example_mapping(page, &mut mapper, &mut frame_allocator);
 
-    let mapper = unsafe { memory::init(phys_mem_offset) };
-
-    for &address in &addresses {
-        let virt = VirtAddr::new(address);
-        // new: use the `mapper.translate_addr` method
-        let phys = mapper.translate_addr(virt);
-        println!("{:?} -> {:?}", virt, phys);
-    }
+    // write the string `New!` to the screen through the new mapping
+    let page_ptr: *mut u64 = page.start_address().as_mut_ptr();
+    unsafe { page_ptr.offset(200).write_volatile(0x_f021_f077_f065_f04e)};
 }
 
 /// This function is called on panic
