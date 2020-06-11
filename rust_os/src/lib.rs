@@ -4,6 +4,9 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
+#![feature(alloc_error_handler)] // at the top of the file
+
+extern crate alloc;
 
 pub mod vga_driver;
 #[macro_use] pub mod serial_driver;
@@ -12,6 +15,7 @@ pub mod interrupts;
 pub mod gdt;
 pub mod memory;
 pub mod qemu;
+pub mod allocator;
 
 use core::panic::PanicInfo;
 
@@ -63,4 +67,9 @@ fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     test_panic_handler(info)
+}
+
+#[alloc_error_handler]
+fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
+    panic!("allocation error: {:?}", layout)
 }
