@@ -8,7 +8,7 @@ extern crate alloc;
 
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
-use rust_os::qemu::{exit_qemu, QemuExitCode};
+#[allow(unused)] use rust_os::qemu::{exit_qemu, QemuExitCode};
 
 entry_point!(main);
 
@@ -36,7 +36,6 @@ fn panic(info: &PanicInfo) -> ! {
     rust_os::test_panic_handler(info)
 }
 
-use rust_os::{serial_print, serial_println};
 use alloc::boxed::Box;
 
 #[test_case]
