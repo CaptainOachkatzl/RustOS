@@ -36,9 +36,29 @@ fn kernel_main(boot_info: &'static BootInfo) -> !
     allocator::init_heap(&mut mapper, &mut frame_allocator)
         .expect("heap initialization failed");
 
+    asynchronous_operation();
+
     test_process();
 
     kernel_process();
+}
+
+fn asynchronous_operation()
+{
+    use rust_os::task::{Task, simple_executor::SimpleExecutor};
+
+    let mut executor = SimpleExecutor::new();
+    executor.spawn(Task::new(example_task()));
+    executor.run();
+}
+
+async fn async_number() -> u32 {
+    42
+}
+
+async fn example_task() {
+    let number = async_number().await;
+    println!("async number: {}", number);
 }
 
 fn kernel_process() -> !
