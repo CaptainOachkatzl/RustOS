@@ -15,19 +15,13 @@ entry_point!(kernel_main);
 #[no_mangle]
 fn kernel_main(boot_info: &'static BootInfo) -> ! 
 {
-    use rust_os::memory;
-    use x86_64::{structures::paging::MapperAllSizes, VirtAddr};
-
     println!("Starting up OS...");
 
     println!("Initializing modules...");
 
     rust_os::init();
 
-    #[cfg(test)]
-    test_main();
-    #[cfg(test)]
-    exit_qemu(QemuExitCode::Success);
+    test_process();
 
     kernel_process();
 }
@@ -36,6 +30,14 @@ fn kernel_process() -> !
 {
     println!("OS ready. Hello. :)");
     rust_os::hlt_loop();
+}
+
+fn test_process()
+{
+    #[cfg(test)]
+    test_main();
+    #[cfg(test)]
+    exit_qemu(QemuExitCode::Success);
 }
 
 /// This function is called on panic
