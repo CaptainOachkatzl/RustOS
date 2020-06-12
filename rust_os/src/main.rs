@@ -13,6 +13,7 @@ use bootloader::{BootInfo, entry_point};
 #[cfg(test)] use rust_os::qemu::{exit_qemu, QemuExitCode};
 use rust_os::memory::{self, BootInfoFrameAllocator};
 use x86_64::VirtAddr;
+use rust_os::task::keyboard;
 
 entry_point!(kernel_main);
 
@@ -49,6 +50,7 @@ fn asynchronous_operation()
 
     let mut executor = SimpleExecutor::new();
     executor.spawn(Task::new(example_task()));
+    executor.spawn(Task::new(keyboard::print_keypresses()));
     executor.run();
 }
 
