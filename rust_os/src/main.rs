@@ -52,12 +52,6 @@ fn kernel_process() -> !
     executor.run();
 }
 
-#[allow(unused)]
-fn idle_loop() -> !
-{
-    rust_os::hlt_loop();
-}
-
 fn test_process()
 {
     #[cfg(test)]
