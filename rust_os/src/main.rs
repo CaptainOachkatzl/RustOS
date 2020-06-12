@@ -14,6 +14,7 @@ use bootloader::{BootInfo, entry_point};
 use rust_os::memory::{self, BootInfoFrameAllocator};
 use x86_64::VirtAddr;
 use rust_os::task::keyboard;
+use rust_os::task::{ Task, executor::Executor };
 
 entry_point!(kernel_main);
 
@@ -37,35 +38,23 @@ fn kernel_main(boot_info: &'static BootInfo) -> !
     allocator::init_heap(&mut mapper, &mut frame_allocator)
         .expect("heap initialization failed");
 
-    asynchronous_operation();
+    println!("OS ready. Hello. :)");
 
     test_process();
 
     kernel_process();
 }
 
-fn asynchronous_operation()
+fn kernel_process() -> !
 {
-    use rust_os::task::{Task, simple_executor::SimpleExecutor};
-
-    let mut executor = SimpleExecutor::new();
-    executor.spawn(Task::new(example_task()));
+    let mut executor = Executor::new();
     executor.spawn(Task::new(keyboard::print_keypresses()));
     executor.run();
 }
 
-async fn async_number() -> u32 {
-    42
-}
-
-async fn example_task() {
-    let number = async_number().await;
-    println!("async number: {}", number);
-}
-
-fn kernel_process() -> !
+#[allow(unused)]
+fn idle_loop() -> !
 {
-    println!("OS ready. Hello. :)");
     rust_os::hlt_loop();
 }
 
